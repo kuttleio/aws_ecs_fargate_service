@@ -241,7 +241,7 @@ resource aws_lb_target_group aws_ecs_fargate_service_target_group {
     unhealthy_threshold = 10
     timeout             = 5
     interval            = 10
-    path                = "/health"
+    path                = var.healthcheck_path
     port                = var.app_port
   }
 }
