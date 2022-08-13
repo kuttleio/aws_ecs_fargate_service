@@ -78,6 +78,10 @@ variable task_role_arn {
   default = null
 }
 
+variable healthcheck_path {
+  type    = string
+  default = "/health"
+}
 variable health_check_grace_period_seconds {
   type    = number
   default = null
