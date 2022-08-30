@@ -2,8 +2,9 @@
 #    CloudWatch Log Groups
 # ---------------------------------------------------
 resource aws_cloudwatch_log_group ecs_group {
-  name = "${var.name_prefix}/fargate/${var.cluster_name}/${var.app_name}/"
-  tags = var.standard_tags
+  name              = "${var.name_prefix}/fargate/${var.cluster_name}/${var.app_name}/"
+  tags              = var.standard_tags
+  retention_in_days = var.retention_in_days
 }
 
 

@@ -78,6 +78,10 @@ variable task_role_arn {
   default = null
 }
 
+variable retention_in_days {
+  default = 7
+}
+
 variable healthcheck_path {
   type    = string
   default = "/health"
