@@ -14,7 +14,6 @@ resource aws_cloudwatch_log_group ecs_group {
 resource aws_ecs_service aws_ecs_fargate_service {
   name                                = "${var.name_prefix}-${var.app_name}"
   cluster                             = var.cluster_arn
-  platform_version                    = var.platform_version
   propagate_tags                      = "SERVICE"
   deployment_maximum_percent          = 200
   deployment_minimum_healthy_percent  = 100
@@ -46,6 +45,8 @@ resource aws_ecs_service aws_ecs_fargate_service {
     container_name   = var.app_name
     container_port   = var.app_port
   }
+
+  depends_on = [data.aws_lb.passed_on]
 }
 
 
