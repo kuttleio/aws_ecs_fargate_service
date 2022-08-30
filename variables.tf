@@ -1,14 +1,23 @@
 variable vpc_id {}
-variable account {}
 variable subnets {}
-variable environment {}
-variable domain_name {}
 variable aws_lb_arn {}
-variable aws_lb_out_port {}
+variable domain_name {}
+variable service_image {}
 variable security_groups {}
-variable execution_role_arn {}
 variable aws_lb_certificate_arn {}
 
+variable execution_role_arn {
+  type    = string
+  default = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/ecsTaskExecutionRole"
+}
+variable logdna_lambda_logs_arn {
+  type    = string
+  default = null
+}
+variable zenv_name {
+  type    = string
+  default = "zbs"
+}
 variable name_prefix {
   type = string
 }
@@ -21,7 +30,7 @@ variable cluster_name {
 variable cluster_arn {
   type = string
 }
-variable app_name {
+variable service_name {
   type = string
 }
 variable container_memory {
@@ -40,10 +49,9 @@ variable task_cpu {
   type    = number
   default = null
 }
-variable container_image {}
-variable app_port {
+variable service_port {
   type    = number
-  default = 9999
+  default = 8080
 }
 variable entrypoint {
   type    = list(string)
@@ -77,7 +85,10 @@ variable task_role_arn {
   type    = string
   default = null
 }
-
+variable retention_in_days {
+  type    = number
+  default = 7
+}
 variable healthcheck_path {
   type    = string
   default = "/health"
@@ -90,33 +101,39 @@ variable launch_type {
   default = "FARGATE"
 }
 variable fargate_weight {
+  type    = number
   default = 1
 }
 variable fargate_base {
+  type    = number
   default = 1
 }
 variable fargate_spot_weight {
+  type    = number
   default = 1
 }
 variable fargate_spot_base {
+  type    = number
   default = 0
 }
 variable platform_version {
   type    = string
   default = "1.4.0" # Before: "LATEST"
 }
-
 variable additional_containers {
   description = "Additional containers definition"
   default = []
 }
-
 variable s3_log_bucket {
   type = string
 }
-
 variable public {
+  type    = bool
   default = false
+}
+variable domain_record {
+  type    = string
+  default = null
 }
 
 variable mount_points {
@@ -138,5 +155,23 @@ variable volumes {
     }))
   }))
   description = "Task volume definitions as list of configuration objects"
+  default     = []
+}
+
+variable environment {
+  type = list(object({
+    name  = any
+    value = any
+  }))
+  description = "List of Environment Variables"
+  default     = []
+}
+
+variable secrets {
+  type = list(object({
+    name      = string
+    valueFrom = string
+  }))
+  description = "List of Secrets"
   default     = []
 }
